@@ -1,10 +1,20 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import MyContext from './MyContext';
 
 function Provider({ children }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const context = {
+    email,
+    setEmail,
+    password,
+    setPassword,
+  };
+
   return (
-    <MyContext.Provider value="pages">
+    <MyContext.Provider value={ context }>
       { children }
     </MyContext.Provider>
   );

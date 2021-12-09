@@ -10,7 +10,9 @@ const Header = () => {
   const history = useHistory();
   const path = history.location.pathname;
   const shouldHeaderRender = () => {
-    if (path.split('/').includes('in-progress') || path.split('/').length === 3) {
+    const DETAILS_PATH_LENGTH = 3;
+    if (path.split('/').includes('in-progress')
+    || path.split('/').length === DETAILS_PATH_LENGTH) {
       setRenderHeader(false);
     }
   };

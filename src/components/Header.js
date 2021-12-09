@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { Link, useHistory } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import '../styles/Header.css';
 
 const Header = () => {
+  const [renderHeader, setRenderHeader] = useState(true);
   const history = useHistory();
-
-  const renderPageTitle = () => {
-    const path = history.location.pathname;
-    return path.split('/')[1].charAt(0).toUpperCase() + path.split('/')[1].slice(1);
+  const path = history.location.pathname;
+  const shouldHeaderRender = () => {
+    if (path.split('/').includes('in-progress') || path.split('/').length === 3) {
+      setRenderHeader(false);
+    }
   };
 
-  return (
+  useEffect(() => {
+    shouldHeaderRender();
+  }, [path]);
 
-    <header>
+  const renderPageTitle = () => path
+    .split('/')[1].charAt(0).toUpperCase() + path.split('/')[1].slice(1);
+
+  const renderHeaderComponent = () => (
+    <header className="header-container">
       <h1>
         <Link to="/">
           <img
@@ -37,6 +46,10 @@ const Header = () => {
       />
 
     </header>
+  );
+
+  return (
+    renderHeader && renderHeaderComponent()
   );
 };
 

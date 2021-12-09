@@ -11,11 +11,12 @@ import Login from './pages/Login';
 function App() {
   return (
     <Provider>
-      <Header />
       <Switch>
         <Route exact path="/" component={ Login } />
-        <Route path="/comidas" component={ Foods } />
-        <Route path="/bebidas" component={ Drinks } />
+        <Header>
+          <Route path="/comidas" component={ Foods } />
+          <Route path="/bebidas" component={ Drinks } />
+        </Header>
       </Switch>
     </Provider>
   );

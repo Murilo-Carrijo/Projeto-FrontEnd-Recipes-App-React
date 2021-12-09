@@ -15,6 +15,38 @@
   max-height: 80vh;
 }
 
+.meal {
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5em;
+  height: 200px;
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.meal-icon {
+  height: 100px;
+  width: 100px;
+}
+
+.meal-name {
+  font-size: 1.5em;
+}
+
+.meal-price {
+  font-size: 1em;
+}
+
+.meal-description {
+  height: 40px;
+  width: 40px;
+}
+
 /*
 #iceLeft {
   animation: clink .8s infinite ease;

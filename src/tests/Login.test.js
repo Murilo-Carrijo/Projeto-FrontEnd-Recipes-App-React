@@ -70,7 +70,7 @@ describe('Testando a tela de Login', () => {
   });
 
   test('Teste a funcionalidade do botão em reencaminhar e salvar no localStorage', () => {
-    renderWithRouter(<App />);
+    const { history } = renderWithRouter(<App />);
 
     const button = screen.getByText(/Entrar/i);
     const email = screen.getByTestId(EMAIL_INPUT_TEST_ID);
@@ -80,8 +80,12 @@ describe('Testando a tela de Login', () => {
     userEvent.type(senha, VALID_PASSWORD);
     userEvent.click(button);
 
+    const { pathname } = history.location;
+
     expect(window.localStorage.getItem('mealsToken')).toEqual(TOKEN);
     expect(window.localStorage.getItem('cocktailsToken')).toEqual(TOKEN);
     expect(window.localStorage.getItem('user')).toEqual(`{"email":"${VALID_EMAIL}"}`);
+    expect(pathname).toBe('/comidas');
+
   });
 });

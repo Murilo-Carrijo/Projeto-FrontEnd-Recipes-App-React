@@ -86,6 +86,5 @@ describe('Testando a tela de Login', () => {
     expect(window.localStorage.getItem('cocktailsToken')).toEqual(TOKEN);
     expect(window.localStorage.getItem('user')).toEqual(`{"email":"${VALID_EMAIL}"}`);
     expect(pathname).toBe('/comidas');
-
   });
 });

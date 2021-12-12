@@ -1,16 +1,26 @@
 import React, { useContext } from 'react';
+// import { useHistory } from 'react-router';
 import MyContext from '../context/MyContext';
 
 function SearchBar() {
   const {
+    // results,
     selectFilter,
     setSelectFilter,
     setFilterInfor,
   } = useContext(MyContext);
 
+  // const history = useHistory();
+
   function handleClick() {
     setFilterInfor(selectFilter);
   }
+
+  // useEffect(() => {
+  //   if (results && results.length === 1) {
+  //     return history.push(`/comidas/${results[0].idMeal}`);
+  //   }
+  // }, [history, results]);
 
   return (
     <form>

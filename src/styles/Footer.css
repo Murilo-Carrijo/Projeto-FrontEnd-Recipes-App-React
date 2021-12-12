@@ -1,0 +1,33 @@
+.footer-container {
+  background-image: linear-gradient(to right, red, yellow);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 10px 10px 20px;
+  position: fixed;
+  text-align: center;
+  width: 100vw;
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: space-evenly;
+  width: 25%;
+}
+
+.footer-nav a {
+  align-items: center;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  justify-content: space-evenly;
+  margin: auto;
+  opacity: 85%;
+  text-decoration: none;
+  width: 10%;
+}
+
+.footer-nav a:hover {
+  opacity: 100%;
+}

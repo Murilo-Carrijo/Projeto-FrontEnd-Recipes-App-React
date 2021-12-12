@@ -1,11 +1,13 @@
 import React, { useContext, useEffect } from 'react';
-import SearchBar from '../components/SearchBar';
+// import { useHistory } from 'react-router-dom';
 import {
   foodsForIngridients,
   foodsForName,
-  foodsForFirstName,
+  foodsForFirstLetter,
 } from '../servises/fetchApi';
 import MyContext from '../context/MyContext';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 function Foods() {
   const {
@@ -14,9 +16,17 @@ function Foods() {
     filterInfo,
   } = useContext(MyContext);
 
+  // const history = useHistory();
+
+  // function getId() {
+  //   if (results.length === 1) {
+  //     history.push(`/comidas/${results[0].idMeal}`);
+  //   }
+  // }
+
   useEffect(() => {
-    foodsForIngridients('').then((recipes) => setResults(recipes));
-  }, []);
+    foodsForIngridients('').then((response) => setResults(response));
+  }, [setResults]);
 
   useEffect(() => {
     if (filterInfo.radio === 'ingredients') {
@@ -30,9 +40,9 @@ function Foods() {
     if (filterInfo.radio === 'first-letter' && filterInfo.text.length > 1) {
       global.alert('Sua busca deve conter somente 1 (um) caracter');
     } else {
-      foodsForFirstName(filterInfo.text).then((recipes) => setResults(recipes));
+      foodsForFirstLetter(filterInfo.text).then((recipes) => setResults(recipes));
     }
-  }, [filterInfo.radio, filterInfo.text]);
+  }, [filterInfo.radio, filterInfo.text, setResults]);
 
   function setFoods(food) {
     return (
@@ -45,12 +55,13 @@ function Foods() {
 
   return (
     <section>
-      <SearchBar />
+      <Header />
       <div>
         {results ? results.map((result) => (
           setFoods(result)))
           : <div>Não encontramos resultados pra sua pesquisa</div>}
       </div>
+      <Footer />
     </section>
   );
 }

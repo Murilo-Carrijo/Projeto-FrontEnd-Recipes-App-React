@@ -7,22 +7,44 @@ import '../styles/Header.css';
 
 const Header = () => {
   const [renderHeader, setRenderHeader] = useState(true);
+  const [renderSearch, setRenderSearch] = useState(false);
+
   const history = useHistory();
   const path = history.location.pathname;
   const shouldHeaderRender = () => {
-    const DETAILS_PATH_LENGTH = 3;
+    // path.split('/').includes === DETAILS_PATH_LENGTH
+    // const DETAILS_PATH_LENGTH = 3;
+    const pathWords = path.split('/');
+    const x = pathWords.filter((word) => word !== '');
+    console.log(x);
+
     if (path.split('/').includes('in-progress')
-    || path.split('/').length === DETAILS_PATH_LENGTH) {
+    ) {
       setRenderHeader(false);
+    }
+  };
+
+  const shouldSearchRender = () => {
+    if (path.split('/').includes('comidas')
+    || path.split('/').includes('area')
+    || path.split('/').includes('bebidas')) {
+      return setRenderSearch(true);
     }
   };
 
   useEffect(() => {
     shouldHeaderRender();
+    shouldSearchRender();
   }, [path]);
 
-  const renderPageTitle = () => path
-    .split('/')[1].charAt(0).toUpperCase() + path.split('/')[1].slice(1);
+  const renderPageTitle = () => {
+    if (path.split('/').includes('explorar')) {
+      return 'Explorar';
+    }
+    return (
+      path
+        .split('/')[1].charAt(0).toUpperCase() + path.split('/')[1].slice(1));
+  };
 
   const renderHeaderComponent = () => (
     <header className="header-container">
@@ -41,11 +63,11 @@ const Header = () => {
       >
         { renderPageTitle() }
       </h1>
-      <img
+      { renderSearch && <img
         data-testid="search-top-btn"
         src={ searchIcon }
         alt=""
-      />
+      /> }
 
     </header>
   );

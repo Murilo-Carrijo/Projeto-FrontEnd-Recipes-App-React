@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import {
   drinksForIngridients,
   drinksForName,
@@ -31,7 +32,6 @@ function Drinks() {
     if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
       drinksForFirstName(filterInfo.text).then((recipes) => setResults(recipes));
     } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
-      console.log('test2');
       global.alert('Sua busca deve conter somente 1 (um) caracter');
     }
   }, [filterInfo.radio, filterInfo.text, setResults]);
@@ -44,6 +44,11 @@ function Drinks() {
       </div>
     );
   }
+
+  if (results.length === 1) {
+    return <Redirect to={ `/bebidas/${results[0].idDrink}` } />;
+  }
+
   return (
     <section>
       <Header />

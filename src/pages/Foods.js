@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   foodsForIngridients,
   foodsForName,
@@ -16,18 +16,20 @@ function Foods() {
     filterInfo,
   } = useContext(MyContext);
 
-  // const history = useHistory();
+  const history = useHistory();
 
-  // function getId() {
-  //   if (results.length === 1) {
-  //     history.push(`/comidas/${results[0].idMeal}`);
-  //   }
-  // }
-
+  // ComponetDidMount
   useEffect(() => {
     foodsForIngridients('').then((response) => setResults(response));
-  }, [setResults]);
+  }, []);
 
+  function redirectPage(food) {
+    if (food.length === 1) {
+      history.push(`/comidas/${food[0].idMeal}`);
+    }
+  }
+
+  // ComponetDidUpdate
   useEffect(() => {
     if (filterInfo.radio === 'ingredients') {
       foodsForIngridients(filterInfo.text).then((recipes) => setResults(recipes));
@@ -42,13 +44,14 @@ function Foods() {
     } else {
       foodsForFirstLetter(filterInfo.text).then((recipes) => setResults(recipes));
     }
-  }, [filterInfo.radio, filterInfo.text, setResults]);
+  });
 
   function setFoods(food) {
     return (
       <div key={ food.idMeal }>
         <p>{food.strMeal}</p>
         <img src={ food.strMealThumb } alt={ food.strMeal } width="161" />
+
       </div>
     );
   }
@@ -57,6 +60,7 @@ function Foods() {
     <section>
       <Header />
       <div>
+        {results && redirectPage(results)}
         {results ? results.map((result) => (
           setFoods(result)))
           : <div>Não encontramos resultados pra sua pesquisa</div>}

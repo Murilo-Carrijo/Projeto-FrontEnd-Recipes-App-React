@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import {
   foodsForIngridients,
   foodsForName,
@@ -16,35 +16,38 @@ function Foods() {
     filterInfo,
   } = useContext(MyContext);
 
-  const history = useHistory();
+  // const history = useHistory();
 
   // ComponetDidMount
   useEffect(() => {
     foodsForIngridients('').then((response) => setResults(response));
-  }, []);
+  }, [setResults]);
 
-  function redirectPage(food) {
-    if (food.length === 1) {
-      history.push(`/comidas/${food[0].idMeal}`);
-    }
-  }
+  // function redirectPage(food) {
+  //   if (food.length === 1) {
+  //     history.push(`/comidas/${food[0].idMeal}`);
+  //   }
+  // }
 
   // ComponetDidUpdate
   useEffect(() => {
     if (filterInfo.radio === 'ingredients') {
+      console.log('test');
       foodsForIngridients(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
     if (filterInfo.radio === 'name') {
+      console.log('test1');
       foodsForName(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
-    if (filterInfo.radio === 'first-letter' && filterInfo.text.length > 1) {
-      global.alert('Sua busca deve conter somente 1 (um) caracter');
-    } else {
+    if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
       foodsForFirstLetter(filterInfo.text).then((recipes) => setResults(recipes));
+    } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
+      console.log('test2');
+      global.alert('Sua busca deve conter somente 1 (um) caracter');
     }
-  });
+  }, [filterInfo.text, filterInfo.radio, setResults]);
 
   function setFoods(food) {
     return (
@@ -60,7 +63,7 @@ function Foods() {
     <section>
       <Header />
       <div>
-        {results && redirectPage(results)}
+        {/* {results && redirectPage(results)} */}
         {results ? results.map((result) => (
           setFoods(result)))
           : <div>Não encontramos resultados pra sua pesquisa</div>}

@@ -28,10 +28,11 @@ function Drinks() {
       drinksForName(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
-    if (filterInfo.radio === 'first-letter' && filterInfo.text.length > 1) {
-      global.alert('Sua busca deve conter somente 1 (um) caracter');
-    } else {
+    if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
       drinksForFirstName(filterInfo.text).then((recipes) => setResults(recipes));
+    } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
+      console.log('test2');
+      global.alert('Sua busca deve conter somente 1 (um) caracter');
     }
   }, [filterInfo.radio, filterInfo.text, setResults]);
 

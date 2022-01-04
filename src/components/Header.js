@@ -27,7 +27,7 @@ const Header = () => {
   const renderHeaderComponent = () => (
     <header className="header-container">
       <h1>
-        <Link to="/">
+        <Link to="/perfil">
           <img
             data-testid="profile-top-btn"
             className="header-logo"

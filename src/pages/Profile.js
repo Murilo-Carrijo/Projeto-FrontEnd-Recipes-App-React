@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Profile() {
-  function clearEmail() {
+  function clearLocalStorage() {
     localStorage.removeItem('user');
     localStorage.removeItem('mealsToken');
     localStorage.removeItem('cocktailsToken');
@@ -31,7 +31,7 @@ function Profile() {
       </Link>
       <Link
         to="/"
-        onClick={ clearEmail }
+        onClick={ clearLocalStorage }
         data-testid="profile-logout-btn"
       >
         Sair

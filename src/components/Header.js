@@ -1,55 +1,70 @@
 import React, { useState, useEffect } from 'react';
-
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import '../styles/Header.css';
 
 const Header = () => {
-  const [renderHeader, setRenderHeader] = useState(true);
+  const [renderHeader, setRenderHeader] = useState(false);
   const [renderSearch, setRenderSearch] = useState(false);
 
-  const history = useHistory();
-  const path = history.location.pathname;
-  const shouldHeaderRender = () => {
-    // path.split('/').includes === DETAILS_PATH_LENGTH
-    // const DETAILS_PATH_LENGTH = 3;
-    const pathWords = path.split('/');
-    const x = pathWords.filter((word) => word !== '');
-    console.log(x);
-
-    if (path.split('/').includes('in-progress')
-    ) {
-      setRenderHeader(false);
-    }
-  };
-
-  const shouldSearchRender = () => {
-    if (path.split('/').includes('comidas')
-    || path.split('/').includes('area')
-    || path.split('/').includes('bebidas')) {
-      return setRenderSearch(true);
-    }
-  };
-
+  const location = useLocation();
+  const { pathname } = location;
   useEffect(() => {
+    const shouldHeaderRender = () => {
+      switch (pathname) {
+      case '/comidas':
+      case '/bebidas':
+      case '/explorar/comidas/area':
+        setRenderHeader(true);
+        setRenderSearch(true);
+        break;
+      case '/explorar':
+      case '/explorar/comidas':
+      case '/explorar/bebidas':
+      case '/explorar/bebidas/ingredientes':
+      case '/explorar/comidas/ingredientes':
+      case '/perfil':
+      case '/receitas-feitas':
+      case '/receitas-favoritas':
+        setRenderHeader(true);
+        setRenderSearch(false);
+        break;
+      default:
+        setRenderHeader(false);
+        setRenderSearch(false);
+      }
+    };
     shouldHeaderRender();
-    shouldSearchRender();
-  }, [path]);
+  }, [location, pathname, renderHeader, renderSearch]);
 
   const renderPageTitle = () => {
-    if (path.split('/').includes('explorar')) {
-      return 'Explorar';
+    if (pathname.split('/').includes('area')) {
+      return 'Explorar Origem';
+    }
+    if (pathname.split('/').includes('ingredientes')) {
+      return 'Explorar Ingredientes';
+    }
+    if (pathname.split('/').includes('explorar')) {
+      return (
+        pathname.split('/')[2] === 'comidas' ? 'Explorar Comidas' : 'Explorar Bebidas'
+      );
+    }
+    if (pathname.split('/').includes('receitas-feitas')) {
+      return 'Receitas Feitas';
+    }
+    if (pathname.split('/').includes('receitas-favoritas')) {
+      return 'Receitas Favoritas';
     }
     return (
-      path
-        .split('/')[1].charAt(0).toUpperCase() + path.split('/')[1].slice(1));
+      pathname
+        .split('/')[1].charAt(0).toUpperCase() + pathname.split('/')[1].slice(1));
   };
 
   const renderHeaderComponent = () => (
     <header className="header-container">
       <h1>
-        <Link to="/">
+        <Link to="/perfil">
           <img
             data-testid="profile-top-btn"
             className="header-logo"

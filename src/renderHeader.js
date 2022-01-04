@@ -1,10 +1,10 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from './components/Header';
 
 const RenderHeader = () => {
-  const history = useHistory();
-  if (history.location.pathname !== '/') {
+  const location = useLocation();
+  if (location.pathname !== '/') {
     return (
       <Header />
     );

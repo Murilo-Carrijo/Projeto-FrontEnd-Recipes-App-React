@@ -17,7 +17,7 @@ export default function Footer() {
           />
           <span>Comidas</span>
         </Link>
-        <Link to="/bebidas">
+        <Link to="/explorar">
           <img
             data-testid="explore-bottom-btn"
             src={ exploreIcon }

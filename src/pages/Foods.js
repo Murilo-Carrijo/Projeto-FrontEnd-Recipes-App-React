@@ -25,11 +25,11 @@ function Foods() {
 
   // ComponetDidUpdate
   useEffect(() => {
-    if (filterInfo.radio === 'ingredients' && results.length !== null) {
+    if (filterInfo.radio === 'ingredients') {
       foodsForIngridients(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
-    if (filterInfo.radio === 'name' && results.length !== null) {
+    if (filterInfo.radio === 'name') {
       foodsForName(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
@@ -55,7 +55,7 @@ function Foods() {
     );
   }
 
-  if (results.length !== null && results.length === 1) {
+  if (results.length === 1) {
     console.log(results);
     return <Redirect to={ `/comidas/${results[0].idMeal}` } />;
   }

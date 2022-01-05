@@ -1,11 +1,11 @@
 .search-bar-container {
-  background-color:rgb(200, 251, 255);
+  background-color: rgb(200, 251, 255);
   border-top: 2px solid rgb(241, 253, 253);
   display: block;
   margin: auto;
   padding: 8px;
   width: 100%;
-} 
+}
 
 .search-input-text {
   border-radius: 8px;
@@ -23,7 +23,7 @@
 
 .search-bar-button {
   background-color: rgb(8, 196, 253);
-  color: rgb(0, 0, 0);
+  color: black;
   display: flex;
   justify-content: space-evenly;
   margin: auto;
@@ -31,6 +31,6 @@
 }
 
 .search-bar-button:hover {
- background-color: rgb(1, 68, 92);
- color: rgb(255, 255, 255);
+  background-color: rgb(1, 68, 92);
+  color: white;
 }

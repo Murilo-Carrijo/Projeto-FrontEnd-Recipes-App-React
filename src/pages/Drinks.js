@@ -16,6 +16,8 @@ function Drinks() {
     filterInfo,
   } = useContext(MyContext);
 
+  const maxlength = 12;
+
   useEffect(() => {
     drinksForName('').then((recipes) => setResults(recipes));
   }, [setResults]);
@@ -38,14 +40,19 @@ function Drinks() {
 
   function setDrinks(food) {
     return (
-      <div key={ food.idDrink }>
-        <p>{food.strDrink}</p>
-        <img src={ food.strDrinkThumb } alt={ food.strDrink } width="161" />
+      <div key={ food.idDrink } data-testid={ `${results.indexOf(food)}-recipe-card` }>
+        <p data-testid={ `${results.indexOf(food)}-card-name` }>{food.strDrink}</p>
+        <img
+          src={ food.strDrinkThumb }
+          alt={ food.strDrink }
+          width="161"
+          data-testid={ `${results.indexOf(food)}-card-img` }
+        />
       </div>
     );
   }
 
-  if (results.length === 1) {
+  if (results.length !== null && results.length === 1) {
     return <Redirect to={ `/bebidas/${results[0].idDrink}` } />;
   }
 
@@ -54,8 +61,11 @@ function Drinks() {
       <Header />
       <div>
         {results ? results.map((result) => (
-          setDrinks(result)))
-          : <div>Não encontramos resultados pra sua pesquisa</div>}
+          results.indexOf(result) < maxlength && setDrinks(result)))
+          : global.alert(
+            'Sinto muito, não encontramos nenhuma receita para esses filtros.',
+          )}
+        ;
       </div>
       <Footer />
     </section>

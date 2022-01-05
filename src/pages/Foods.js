@@ -16,6 +16,8 @@ function Foods() {
     filterInfo,
   } = useContext(MyContext);
 
+  const maxlength = 12;
+
   // ComponetDidMount
   useEffect(() => {
     foodsForIngridients('').then((response) => setResults(response));
@@ -23,11 +25,11 @@ function Foods() {
 
   // ComponetDidUpdate
   useEffect(() => {
-    if (filterInfo.radio === 'ingredients') {
+    if (filterInfo.radio === 'ingredients' && results.length !== null) {
       foodsForIngridients(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
-    if (filterInfo.radio === 'name') {
+    if (filterInfo.radio === 'name' && results.length !== null) {
       foodsForName(filterInfo.text).then((recipes) => setResults(recipes));
     }
 
@@ -36,19 +38,25 @@ function Foods() {
     } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
       global.alert('Sua busca deve conter somente 1 (um) caracter');
     }
-  }, [filterInfo.text, filterInfo.radio, setResults]);
+  }, [filterInfo.text, filterInfo.radio, setResults, results]);
 
   function setFoods(food) {
     return (
-      <div key={ food.idMeal }>
-        <p>{food.strMeal}</p>
-        <img src={ food.strMealThumb } alt={ food.strMeal } width="161" />
+      <div key={ food.idMeal } data-testid={ `${results.indexOf(food)}-recipe-card` }>
+        <p data-testid={ `${results.indexOf(food)}-card-name` }>{food.strMeal}</p>
+        <img
+          src={ food.strMealThumb }
+          alt={ food.strMeal }
+          data-testid={ `${results.indexOf(food)}-card-img` }
+          width="161"
+        />
 
       </div>
     );
   }
 
-  if (results.length === 1) {
+  if (results.length !== null && results.length === 1) {
+    console.log(results);
     return <Redirect to={ `/comidas/${results[0].idMeal}` } />;
   }
 
@@ -57,8 +65,10 @@ function Foods() {
       <Header />
       <div>
         {results ? results.map((result) => (
-          setFoods(result)))
-          : <div>Não encontramos resultados pra sua pesquisa</div>}
+          results.indexOf(result) < maxlength && setFoods(result)))
+          : global.alert(
+            'Sinto muito, não encontramos nenhuma receita para esses filtros.',
+          )}
       </div>
       <Footer />
     </section>

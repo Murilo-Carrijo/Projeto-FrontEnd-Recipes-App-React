@@ -31,6 +31,7 @@ function Foods() {
 
     if (filterInfo.radio === 'name') {
       foodsForName(filterInfo.text).then((recipes) => setResults(recipes));
+      console.log('test');
     }
 
     if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
@@ -38,7 +39,7 @@ function Foods() {
     } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
       global.alert('Sua busca deve conter somente 1 (um) caracter');
     }
-  }, [filterInfo.text, filterInfo.radio, setResults, results]);
+  }, [filterInfo.text, filterInfo.radio, setResults]);
 
   function setFoods(food) {
     return (
@@ -56,7 +57,7 @@ function Foods() {
   }
 
   if (results.length === 1) {
-    console.log(results);
+    console.log('test1');
     return <Redirect to={ `/comidas/${results[0].idMeal}` } />;
   }
 

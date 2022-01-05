@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap') ;
+
+:root {
+
+  --font-oswald: 'Oswald';
+
+  --black: rgb(20, 17, 17);
+
+  --black-opacity6: rgba(20, 17, 17, 0.6);
+
+  --black-opacity8: rgba(20, 17, 17, 0.8);
+
+  --white: rgb(250, 253, 250);
+
+  --white-opacity8: rgba(250, 253, 250, 0.8);
+
+  --red-opacity9: rgba(146, 0, 71, 0.9);
+
+  --gray-opacity8: rgba(122, 111, 112, 0.8);
+}
+
+.content-login-img {
+  align-items: center;
+  background-image: url('https://images.pexels.com/photos/684965/pexels-photo-684965.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.content-form-opacity {
+  align-items: center;
+  backdrop-filter: blur(2px);
+  background-color: var(--black-opacity6);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-oswald) , sans-serif;
+  height: 100vh;
+  width: 100vw;
+}
+
+.content-form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title-project, .title-login {
+  color: var(--white);
+  text-align: center;
+}
+
+.input-login {
+  background-color: var(--white-opacity8);
+  border: 2px solid transparent;
+  border-radius: 3px;
+  margin: 5px;
+}
+
+.input-login:focus {
+  border: 2px solid var(--red-opacity9);
+  border-radius: 3px;
+  outline: 0;
+  transition: ease-in-out , width 0.35s ease-in-out;
+}
+
+.button-login {
+  background-color: var(--red-opacity9);
+  border: 1px solid var(--black-opacity6);
+  border-radius: 3px;
+  color: var(--white-opacity8);
+  transition: ease-in-out , width 0.35s ease-in-out;
+}
+
+.button-login:disabled {
+  background-color: var(--gray-opacity8);
+  border: 1px solid var(--black-opacity6);
+  border-radius: 3px;
+  color: var(--black-opacity6);
+}
+
+@media screen and ( min-width : 330px ) and ( max-width : 600px ) {
+
+  .content-login-img {
+    background-image: url('https://images.pexels.com/photos/684965/pexels-photo-684965.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500');
+    background-repeat: no-repeat;
+  }
+
+  .title-project, .title-login {
+    font-size: 40px;
+    text-shadow: 1px 2px 5px var(--black);
+  }
+
+  .content-form {
+    padding-top: 15%;
+    width: 330px;
+  }
+
+  .input-login {
+    font-size: 18px;
+    padding: 13px 18px;
+    width: 80%;
+  }
+
+  .input-login:focus {
+    width: 83%;
+  }
+
+  .button-login {
+    font-size: 20px;
+    margin-top: 25px;
+    padding: 10px;
+    width: 85%;
+  }
+
+  .button-login:disabled {
+    font-size: 20px;
+    margin-top: 25px;
+    padding: 10px;
+    width: 80%;
+  }
+}
+
+@media screen and ( min-width : 601px ) and ( max-width : 1024px ) {
+
+  .title-project {
+    font-size: 60px;
+    text-shadow: 1px 3px 6px var(--black);
+  }
+
+  .title-login {
+    font-size: 50px;
+    text-shadow: 1px 3px 6px var(--black);
+  }
+
+  .content-form {
+    align-items: center;
+    background-color: var(--black-opacity8);
+    border: 1px solid var(--black);
+    border-radius: 5px;
+    margin: auto;
+    padding: 50px 10px;
+    width: 350px;
+  }
+
+  .input-login {
+    font-size: 23px;
+    padding: 13px 18px;
+    width: 80%;
+  }
+
+  .input-login:focus {
+    width: 83%;
+  }
+
+  .button-login {
+    font-size: 27px;
+    margin-top: 30px;
+    padding: 13px;
+    width: 88%;
+  }
+
+  .button-login:disabled {
+    font-size: 27px;
+    margin-top: 30px;
+    padding: 13px;
+    width: 85%;
+  }
+}
+
+@media screen and ( min-width : 1024px ) {
+
+  .title-project {
+    font-size: 73px;
+    text-shadow: 1px 1px 3px var(--black);
+  }
+
+  .content-form-opacity {
+    backdrop-filter: blur(3px);
+  }
+
+  .content-form {
+    background-color: var(--black-opacity8);
+    border: 1px solid var(--black);
+    border-radius: 5px;
+    display: flex;
+    padding: 50px 20px;
+    width: 350px;
+  }
+
+  .title-login {
+    font-size: 45px;
+    text-shadow: 1px 1px 5px var(--black);
+  }
+
+  .input-login {
+    font-size: 18px;
+    padding: 15px;
+    width: 80%;
+  }
+
+  .input-login:focus {
+    width: 82%;
+  }
+
+  .button-login {
+    font-size: 25px;
+    margin-top: 35px;
+    padding: 13px;
+    width: 85%;
+  }
+
+  .button-login:disabled {
+    font-size: 25px;
+    margin-top: 35px;
+    padding: 13px;
+    width: 80%;
+  }
+}

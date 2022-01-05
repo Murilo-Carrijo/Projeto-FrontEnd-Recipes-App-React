@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import MyContext from '../context/MyContext';
+import '../styles/Login.css';
 
 function Login() {
   const {
@@ -36,29 +37,38 @@ function Login() {
   }
 
   return (
-    <form onSubmit={ saveLocalStorage }>
-      <input
-        data-testid="email-input"
-        placeholder="Email"
-        type="email"
-        value={ userEmail }
-        onChange={ (e) => setUserEmail(e.target.value) }
-      />
-      <input
-        data-testid="password-input"
-        placeholder="senha"
-        type="password"
-        value={ userPassword }
-        onChange={ (e) => setUserPassword(e.target.value) }
-      />
-      <button
-        data-testid="login-submit-btn"
-        type="submit"
-        disabled={ validateUser() }
-      >
-        Entrar
-      </button>
-    </form>
+    <div className="content-login-img">
+      <div className="content-form-opacity">
+        <h1 className="title-project">Projeto de Receitas</h1>
+        <form className="content-form" onSubmit={ saveLocalStorage }>
+          <h2 className="title-login">Login</h2>
+          <input
+            className="input-login"
+            data-testid="email-input"
+            placeholder="Email"
+            type="email"
+            value={ userEmail }
+            onChange={ (e) => setUserEmail(e.target.value) }
+          />
+          <input
+            className="input-login"
+            data-testid="password-input"
+            placeholder="senha"
+            type="password"
+            value={ userPassword }
+            onChange={ (e) => setUserPassword(e.target.value) }
+          />
+          <button
+            className="button-login"
+            data-testid="login-submit-btn"
+            type="submit"
+            disabled={ validateUser() }
+          >
+            Entrar
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
 

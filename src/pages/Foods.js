@@ -52,7 +52,6 @@ function Foods() {
   }
 
   if (results.length === 1) {
-    console.log('test1');
     return <Redirect to={ `/comidas/${results[0].idMeal}` } />;
   }
 

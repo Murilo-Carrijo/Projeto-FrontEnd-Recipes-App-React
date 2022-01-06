@@ -1,13 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import {
-  drinksForIngridients,
-  drinksForName,
-  drinksForFirstName,
-} from '../servises/fetchApi';
+import { drinksForName } from '../servises/fetchApi';
 import MyContext from '../context/MyContext';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import requestDrinks from '../servises/requestDrinks';
 
 function Drinks() {
   const {
@@ -19,23 +15,19 @@ function Drinks() {
   const maxlength = 12;
 
   useEffect(() => {
-    drinksForName('').then((recipes) => setResults(recipes));
+    drinksForName('').then((recipes) => { if (recipes) { return setResults(recipes); } });
   }, [setResults]);
 
+  function handleResults(i) {
+    if (i) {
+      setResults(i);
+    } else {
+      global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
+    }
+  }
+
   useEffect(() => {
-    if (filterInfo.radio === 'ingredients') {
-      drinksForIngridients(filterInfo.text).then((recipes) => setResults(recipes));
-    }
-
-    if (filterInfo.radio === 'name') {
-      drinksForName(filterInfo.text).then((recipes) => setResults(recipes));
-    }
-
-    if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
-      drinksForFirstName(filterInfo.text).then((recipes) => setResults(recipes));
-    } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
-      global.alert('Sua busca deve conter somente 1 (um) caracter');
-    }
+    requestDrinks(filterInfo, results, setResults, handleResults);
   }, [filterInfo.radio, filterInfo.text, setResults]);
 
   function setDrinks(food) {
@@ -58,7 +50,6 @@ function Drinks() {
 
   return (
     <section>
-      <Header />
       <div>
         {results ? results.map((result) => (
           results.indexOf(result) < maxlength && setDrinks(result)))

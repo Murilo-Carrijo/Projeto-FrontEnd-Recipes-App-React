@@ -2,12 +2,10 @@ import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import {
   foodsForIngridients,
-  foodsForName,
-  foodsForFirstLetter,
 } from '../servises/fetchApi';
 import MyContext from '../context/MyContext';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import requestFoods from '../servises/requestFoods';
 
 function Foods() {
   const {
@@ -20,25 +18,22 @@ function Foods() {
 
   // ComponetDidMount
   useEffect(() => {
-    foodsForIngridients('').then((response) => setResults(response));
+    foodsForIngridients('').then((response) => {
+      if (response) { return setResults(response); }
+    });
   }, [setResults]);
+
+  function handleResults(i) {
+    if (i) {
+      setResults(i);
+    } else {
+      global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
+    }
+  }
 
   // ComponetDidUpdate
   useEffect(() => {
-    if (filterInfo.radio === 'ingredients') {
-      foodsForIngridients(filterInfo.text).then((recipes) => setResults(recipes));
-    }
-
-    if (filterInfo.radio === 'name') {
-      foodsForName(filterInfo.text).then((recipes) => setResults(recipes));
-      console.log('test');
-    }
-
-    if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
-      foodsForFirstLetter(filterInfo.text).then((recipes) => setResults(recipes));
-    } else if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
-      global.alert('Sua busca deve conter somente 1 (um) caracter');
-    }
+    requestFoods(filterInfo, results, setResults, handleResults);
   }, [filterInfo.text, filterInfo.radio, setResults]);
 
   function setFoods(food) {
@@ -63,7 +58,6 @@ function Foods() {
 
   return (
     <section>
-      <Header />
       <div>
         {results ? results.map((result) => (
           results.indexOf(result) < maxlength && setFoods(result)))

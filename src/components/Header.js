@@ -7,7 +7,8 @@ import '../styles/Header.css';
 
 const Header = () => {
   const [renderHeader, setRenderHeader] = useState(false);
-  const [renderSearch, setRenderSearch] = useState(false);
+  const [renderSearchIcon, setRenderSearchIcon] = useState(false);
+  const [renderSearchBar, setRenderSearchBar] = useState(false);
 
   const location = useLocation();
   const { pathname } = location;
@@ -18,7 +19,7 @@ const Header = () => {
       case '/bebidas':
       case '/explorar/comidas/area':
         setRenderHeader(true);
-        setRenderSearch(true);
+        setRenderSearchIcon(true);
         break;
       case '/explorar':
       case '/explorar/comidas':
@@ -29,15 +30,15 @@ const Header = () => {
       case '/receitas-feitas':
       case '/receitas-favoritas':
         setRenderHeader(true);
-        setRenderSearch(false);
+        setRenderSearchIcon(false);
         break;
       default:
         setRenderHeader(false);
-        setRenderSearch(false);
+        setRenderSearchIcon(false);
       }
     };
     shouldHeaderRender();
-  }, [location, pathname, renderHeader, renderSearch]);
+  }, [location, pathname, renderHeader, renderSearchIcon]);
 
   const renderPageTitle = () => {
     if (pathname.split('/').includes('area')) {
@@ -79,11 +80,17 @@ const Header = () => {
       >
         { renderPageTitle() }
       </h1>
-      { renderSearch && <img
-        data-testid="search-top-btn"
-        src={ searchIcon }
-        alt=""
-      /> }
+      { renderSearchIcon && (
+        <button
+          onClick={ () => setRenderSearchBar(!renderSearchBar) }
+          type="button"
+        >
+          <img
+            data-testid="search-top-btn"
+            src={ searchIcon }
+            alt=""
+          />
+        </button>) }
 
     </header>
   );
@@ -91,7 +98,7 @@ const Header = () => {
   return (
     <header>
       {renderHeader && renderHeaderComponent()}
-      <SearchBar />
+      {renderSearchBar && <SearchBar />}
     </header>
   );
 };

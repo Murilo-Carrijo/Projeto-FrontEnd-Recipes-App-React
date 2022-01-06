@@ -31,7 +31,7 @@ function Profile() {
       </Link>
       <Link
         to="/"
-        onClick={ clearLocalStorage }
+        onClick={ () => clearLocalStorage() }
         data-testid="profile-logout-btn"
       >
         Sair

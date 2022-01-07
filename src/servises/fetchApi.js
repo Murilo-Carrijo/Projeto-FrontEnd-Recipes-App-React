@@ -34,3 +34,15 @@ export async function drinksForFirstName(drinks) {
   const dataApi = await response.json();
   return dataApi.drinks;
 }
+
+export async function fetchFoodsDetails(id) {
+  const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+  const dataApi = await response.json();
+  return dataApi.meals[0];
+}
+
+export async function fetchDrinksDetails(id) {
+  const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
+  const dataApi = await response.json();
+  return dataApi.drinks[0];
+}

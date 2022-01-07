@@ -8,6 +8,7 @@ function Provider({ children }) {
   const [selectFilter, setSelectFilter] = useState({ radio: '', text: '' });
   const [results, setResults] = useState([]);
   const [filterInfo, setFilterInfor] = useState({});
+  const [details, setDetails] = useState([]);
 
   const context = {
     userEmail,
@@ -20,6 +21,8 @@ function Provider({ children }) {
     setResults,
     filterInfo,
     setFilterInfor,
+    details,
+    setDetails,
   };
 
   return (

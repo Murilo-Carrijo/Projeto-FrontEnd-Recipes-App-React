@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-// import { useLocation } from 'react-router-dom';
 import MyContext from '../context/MyContext';
 import { fetchDrinksDetails } from '../servises/fetchApi';
 
@@ -70,6 +69,9 @@ function DetailsRecipe(id) {
       <button
         type="button"
         data-testid="start-recipe-btn"
+        onClick={ () => {
+          window.location.href += '/in-progress';
+        } }
       >
         iniciar a receita
       </button>

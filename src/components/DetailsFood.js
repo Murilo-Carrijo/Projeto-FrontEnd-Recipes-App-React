@@ -76,6 +76,9 @@ function DetailsRecipe(id) {
       <button
         type="button"
         data-testid="start-recipe-btn"
+        onClick={ () => {
+          window.location.href += '/in-progress';
+        } }
       >
         iniciar a receita
       </button>

@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 import RecipeCard from '../components/RecipeCard';
 import CategoriesButtons from '../components/CategoriesButtons';
 import {
-  requestFoodsByName,
+  requestFoodsIngredients,
   requestFoodsFilterCategories,
   requestFoodsListCategories,
 } from '../servises/fetchFoods';
@@ -35,7 +35,7 @@ function Foods() {
   const isFoods = foodsRecipes.length === 1;
 
   useEffect(() => {
-    requestFoodsByName('').then((response) => {
+    requestFoodsIngredients('').then((response) => {
       if (response) {
         setResults(response);
         setFoodsRecipes(response);

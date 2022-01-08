@@ -16,6 +16,7 @@ import RecipesFavorites from './pages/RecipesFavorites';
 import Foods from './pages/Foods';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import NotFound from './pages/NotFound';
 
 const Routes = () => (
   <Switch>
@@ -98,6 +99,11 @@ const Routes = () => (
       exact
       path="/receitas-favoritas"
       component={ RecipesFavorites }
+    />
+    <Route
+      exact
+      path="/*"
+      component={ NotFound }
     />
   </Switch>
 );

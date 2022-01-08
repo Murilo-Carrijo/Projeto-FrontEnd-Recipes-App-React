@@ -1,24 +1,29 @@
 import {
-  drinksForIngridients,
-  drinksForName,
-  drinksForFirstName,
-} from './fetchApi';
+  requestDrinksIngredients,
+  requestDrinksByName,
+  requestDrinksByFirstLetter,
+} from '../servises/fetchDrinks';
 
-function requestDrinks(filterInfo, results, setResults, handleResults) {
+function requestDrinks(filterInfo, results, setResults) {
   if (filterInfo.radio === 'ingredients') {
-    drinksForIngridients(filterInfo.text).then((recipes) => handleResults(recipes));
+    requestDrinksIngredients(filterInfo.text)
+      .then((recipes) => setResults(recipes));
   }
 
   if (filterInfo.radio === 'name') {
-    drinksForName(filterInfo.text).then((recipes) => handleResults(recipes));
+    requestDrinksByName(filterInfo.text)
+      .then((recipes) => setResults(recipes));
   }
 
   if (filterInfo.radio === 'first-letter' && filterInfo.text.length === 1) {
-    drinksForFirstName(filterInfo.text).then((recipes) => setResults(recipes));
+    requestDrinksByFirstLetter(filterInfo.text)
+      .then((recipes) => setResults(recipes));
   }
+
   if (filterInfo.radio === 'first-letter' && filterInfo.text.length !== 0) {
     global.alert('Sua busca deve conter somente 1 (um) caracter');
   }
+
   if (!results) {
     global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
   }

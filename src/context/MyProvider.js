@@ -8,6 +8,12 @@ function Provider({ children }) {
   const [selectFilter, setSelectFilter] = useState({ radio: '', text: '' });
   const [results, setResults] = useState([]);
   const [filterInfo, setFilterInfor] = useState({});
+  const [categoriesMeals, setCategoriesMeals] = useState([]);
+  const [categoriesDrinks, setCategoriesDrinks] = useState([]);
+  const [resultsCategories, setResultsCategories] = useState([]);
+  const [selectCategories, setSelectCategories] = useState('');
+  const [foodsRecipes, setFoodsRecipes] = useState([]);
+  const [drinksRecipes, setDrinksRecipes] = useState([]);
   const [details, setDetails] = useState([]);
 
   const context = {
@@ -21,6 +27,18 @@ function Provider({ children }) {
     setResults,
     filterInfo,
     setFilterInfor,
+    categoriesMeals,
+    setCategoriesMeals,
+    categoriesDrinks,
+    setCategoriesDrinks,
+    resultsCategories,
+    setResultsCategories,
+    selectCategories,
+    setSelectCategories,
+    foodsRecipes,
+    setFoodsRecipes,
+    drinksRecipes,
+    setDrinksRecipes,
     details,
     setDetails,
   };

@@ -1,62 +1,96 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import { drinksForName } from '../servises/fetchApi';
 import MyContext from '../context/MyContext';
+// FUNCTIONS HELPERS
+import conditionsForRequestsDrinks from '../helpers/conditionsForRequestsDrinks';
+import generateBtnCategory from '../helpers/generateBtnCategory';
+// COMPONENTS
 import Footer from '../components/Footer';
-import requestDrinks from '../servises/requestDrinks';
+import RecipeCard from '../components/RecipeCard';
+import CategoriesButtons from '../components/CategoriesButtons';
+import {
+  requestDrinksByName,
+  requestDrinksFilterCategories,
+  requestDrinksListCategories,
+} from '../servises/fetchDrinks';
+
+const MAX_LENGTH = 12;
+const MAX_CATEGORIES = 5;
+const PHRASE = 'Sinto muito, não encontramos nenhuma receita para esses filtros.';
 
 function Drinks() {
   const {
     results,
     setResults,
     filterInfo,
+    categoriesDrinks,
+    setCategoriesDrinks,
+    selectCategories,
+    resultsCategories,
+    setResultsCategories,
+    drinksRecipes,
+    setDrinksRecipes,
   } = useContext(MyContext);
 
-  const maxlength = 12;
+  useEffect(() => {
+    requestDrinksByName('').then((response) => {
+      if (response) {
+        setResults(response);
+        setDrinksRecipes(response);
+      }
+    });
+  }, [setResults, setDrinksRecipes]);
 
   useEffect(() => {
-    drinksForName('').then((recipes) => { if (recipes) { return setResults(recipes); } });
-  }, [setResults]);
+    conditionsForRequestsDrinks(filterInfo, drinksRecipes, setDrinksRecipes);
+  }, [filterInfo.radio, filterInfo.text, setDrinksRecipes]);
 
-  function handleResults(i) {
-    if (i) {
-      setResults(i);
+  useEffect(() => {
+    if (selectCategories && selectCategories !== '') {
+      requestDrinksFilterCategories(selectCategories).then((response) => {
+        setResultsCategories(response);
+        setDrinksRecipes([]);
+      });
     } else {
-      global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
+      setDrinksRecipes(results);
     }
-  }
+  }, [setResultsCategories, selectCategories]);
 
   useEffect(() => {
-    requestDrinks(filterInfo, results, setResults, handleResults);
-  }, [filterInfo.radio, filterInfo.text, setResults]);
+    generateBtnCategory(requestDrinksListCategories, setCategoriesDrinks, MAX_CATEGORIES);
+  }, [setCategoriesDrinks]);
 
-  function setDrinks(food) {
-    return (
-      <div key={ food.idDrink } data-testid={ `${results.indexOf(food)}-recipe-card` }>
-        <p data-testid={ `${results.indexOf(food)}-card-name` }>{food.strDrink}</p>
-        <img
-          src={ food.strDrinkThumb }
-          alt={ food.strDrink }
-          width="161"
-          data-testid={ `${results.indexOf(food)}-card-img` }
-        />
-      </div>
-    );
-  }
-
-  if (results.length !== null && results.length === 1) {
-    return <Redirect to={ `/bebidas/${results[0].idDrink}` } />;
+  function verifyLength() {
+    if (drinksRecipes && drinksRecipes.length === 1) {
+      return <Redirect to={ `/bebidas/${drinksRecipes[0].idDrink}` } />;
+    }
   }
 
   return (
     <section>
+      {categoriesDrinks && (
+        <CategoriesButtons listCategories={ categoriesDrinks } recipeType="drink" />
+      )}
       <div>
-        {results ? results.map((result) => (
-          results.indexOf(result) < maxlength && setDrinks(result)))
-          : global.alert(
-            'Sinto muito, não encontramos nenhuma receita para esses filtros.',
-          )}
-        ;
+        {drinksRecipes ? drinksRecipes.map((food, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="bebidas"
+            id={ food.idDrink }
+            index={ index }
+            key={ food.idDrink }
+            name={ food.strDrink }
+            thumb={ food.strDrinkThumb }
+          />)) : global.alert(PHRASE)}
+        {resultsCategories && resultsCategories.map((category, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="bebidas"
+            id={ category.idDrink }
+            index={ index }
+            key={ category.idDrink }
+            name={ category.strDrink }
+            thumb={ category.strDrinkThumb }
+          />))}
+        {verifyLength()}
       </div>
       <Footer />
     </section>

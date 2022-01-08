@@ -1,68 +1,95 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import {
-  foodsForIngridients,
-} from '../servises/fetchApi';
 import MyContext from '../context/MyContext';
+// FUNCTIONS HELPERS
+import conditionsForRequestsFoods from '../helpers/conditionsForRequestsFoods';
+import generateBtnCategory from '../helpers/generateBtnCategory';
+// COMPONENTS
 import Footer from '../components/Footer';
-import requestFoods from '../servises/requestFoods';
+import RecipeCard from '../components/RecipeCard';
+import CategoriesButtons from '../components/CategoriesButtons';
+import {
+  requestFoodsIngredients,
+  requestFoodsFilterCategories,
+  requestFoodsListCategories,
+} from '../servises/fetchFoods';
+
+const MAX_LENGTH = 12;
+const MAX_CATEGORIES = 5;
+const PHRASE = 'Sinto muito, não encontramos nenhuma receita para esses filtros.';
 
 function Foods() {
   const {
     results,
     setResults,
     filterInfo,
+    categoriesMeals,
+    setCategoriesMeals,
+    selectCategories,
+    resultsCategories,
+    setResultsCategories,
+    foodsRecipes,
+    setFoodsRecipes,
   } = useContext(MyContext);
 
-  const maxlength = 12;
-
-  // ComponetDidMount
   useEffect(() => {
-    foodsForIngridients('').then((response) => {
-      if (response) { return setResults(response); }
+    requestFoodsIngredients('').then((response) => {
+      if (response) {
+        setResults(response);
+        setFoodsRecipes(response);
+      }
     });
-  }, [setResults]);
+  }, [setResults, setFoodsRecipes]);
 
-  function handleResults(i) {
-    if (i) {
-      setResults(i);
+  useEffect(() => {
+    conditionsForRequestsFoods(filterInfo, foodsRecipes, setFoodsRecipes);
+  }, [filterInfo.text, filterInfo.radio, setFoodsRecipes]);
+
+  useEffect(() => {
+    if (selectCategories && selectCategories !== '') {
+      requestFoodsFilterCategories(selectCategories).then((response) => {
+        setResultsCategories(response);
+        setFoodsRecipes([]);
+      });
     } else {
-      global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
+      setFoodsRecipes(results);
+    }
+  }, [setResultsCategories, selectCategories]);
+
+  useEffect(() => {
+    generateBtnCategory(requestFoodsListCategories, setCategoriesMeals, MAX_CATEGORIES);
+  }, [setCategoriesMeals]);
+
+  function verifyLength() {
+    if (foodsRecipes && foodsRecipes.length === 1) {
+      return <Redirect to={ `/comidas/${foodsRecipes[0].idMeal}` } />;
     }
   }
-
-  // ComponetDidUpdate
-  useEffect(() => {
-    requestFoods(filterInfo, results, setResults, handleResults);
-  }, [filterInfo.text, filterInfo.radio, setResults]);
-
-  function setFoods(food) {
-    return (
-      <div key={ food.idMeal } data-testid={ `${results.indexOf(food)}-recipe-card` }>
-        <p data-testid={ `${results.indexOf(food)}-card-name` }>{food.strMeal}</p>
-        <img
-          src={ food.strMealThumb }
-          alt={ food.strMeal }
-          data-testid={ `${results.indexOf(food)}-card-img` }
-          width="161"
-        />
-
-      </div>
-    );
-  }
-
-  if (results.length === 1) {
-    return <Redirect to={ `/comidas/${results[0].idMeal}` } />;
-  }
-
   return (
     <section>
+      {categoriesMeals && (
+        <CategoriesButtons listCategories={ categoriesMeals } recipeType="food" />
+      )}
       <div>
-        {results ? results.map((result) => (
-          results.indexOf(result) < maxlength && setFoods(result)))
-          : global.alert(
-            'Sinto muito, não encontramos nenhuma receita para esses filtros.',
-          )}
+        {foodsRecipes ? foodsRecipes.map((food, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="comidas"
+            id={ food.idMeal }
+            index={ index }
+            key={ food.idMeal }
+            name={ food.strMeal }
+            thumb={ food.strMealThumb }
+          />)) : global.alert(PHRASE)}
+        {resultsCategories && resultsCategories.map((category, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="comidas"
+            id={ category.idMeal }
+            index={ index }
+            key={ category.idMeal }
+            name={ category.strMeal }
+            thumb={ category.strMealThumb }
+          />))}
+        {verifyLength()}
       </div>
       <Footer />
     </section>

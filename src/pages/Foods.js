@@ -1,15 +1,22 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import MyContext from '../context/MyContext';
+// FUNCTIONS HELPERS
+import conditionsForRequestsFoods from '../helpers/conditionsForRequestsFoods';
+import generateBtnCategory from '../helpers/generateBtnCategory';
+// COMPONENTS
 import Footer from '../components/Footer';
-import requestFoods from '../servises/requestFoods';
-import requestCategories from '../servises/requestCategories';
+import RecipeCard from '../components/RecipeCard';
 import CategoriesButtons from '../components/CategoriesButtons';
 import {
-  requestFoodsIngredients,
+  requestFoodsByName,
   requestFoodsFilterCategories,
   requestFoodsListCategories,
 } from '../servises/fetchFoods';
+
+const MAX_LENGTH = 12;
+const MAX_CATEGORIES = 5;
+const PHRASE = 'Sinto muito, não encontramos nenhuma receita para esses filtros.';
 
 function Foods() {
   const {
@@ -25,11 +32,10 @@ function Foods() {
     setFoodsRecipes,
   } = useContext(MyContext);
 
-  const maxlength = 12;
-  const MAX_CATEGORIES = 5;
+  const isFoods = foodsRecipes.length === 1;
 
   useEffect(() => {
-    requestFoodsIngredients('').then((response) => {
+    requestFoodsByName('').then((response) => {
       if (response) {
         setResults(response);
         setFoodsRecipes(response);
@@ -37,66 +43,9 @@ function Foods() {
     });
   }, [setResults, setFoodsRecipes]);
 
-  function handleResults(i) {
-    if (i) {
-      setFoodsRecipes(i);
-    } else {
-      global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
-    }
-  }
-
-  // ComponetDidUpdate
   useEffect(() => {
-    requestFoods(filterInfo, foodsRecipes, setFoodsRecipes, handleResults);
+    conditionsForRequestsFoods(filterInfo, foodsRecipes, setFoodsRecipes);
   }, [filterInfo.text, filterInfo.radio, setFoodsRecipes]);
-
-  function handleRecipeFoods(food) {
-    return (
-      <div
-        key={ food.idMeal }
-        data-testid={ `${foodsRecipes.indexOf(food)}-recipe-card` }
-      >
-        <p data-testid={ `${foodsRecipes.indexOf(food)}-card-name` }>{food.strMeal}</p>
-        <img
-          src={ food.strMealThumb }
-          alt={ food.strMeal }
-          data-testid={ `${foodsRecipes.indexOf(food)}-card-img` }
-          width="161"
-        />
-
-      </div>
-    );
-  }
-
-  function handleCategories(food) {
-    return (
-      <div
-        key={ food.idMeal }
-        data-testid={ `${resultsCategories.indexOf(food)}-recipe-card` }
-      >
-        <p
-          data-testid={ `${resultsCategories.indexOf(food)}-card-name` }
-        >
-          {food.strMeal}
-        </p>
-        <img
-          src={ food.strMealThumb }
-          alt={ food.strMeal }
-          data-testid={ `${resultsCategories.indexOf(food)}-card-img` }
-          width="161"
-        />
-      </div>
-    );
-  }
-
-  function renderResultsCategories() {
-    return resultsCategories.map((result) => (
-      resultsCategories.indexOf(result) < maxlength && handleCategories(result)));
-  }
-
-  useEffect(() => {
-    requestCategories(requestFoodsListCategories, setCategoriesMeals, MAX_CATEGORIES);
-  }, []);
 
   useEffect(() => {
     if (selectCategories !== '') {
@@ -109,24 +58,35 @@ function Foods() {
     }
   }, [setResultsCategories, selectCategories]);
 
-  function validate() {
-    if (foodsRecipes.length === 1) {
-      return selectCategories ? setResultsCategories(results)
-        : <Redirect to={ `/comidas/${foodsRecipes[0].idMeal}` } />;
-    }
-  }
+  useEffect(() => {
+    generateBtnCategory(requestFoodsListCategories, setCategoriesMeals, MAX_CATEGORIES);
+  }, [setCategoriesMeals]);
 
   return (
     <section>
-      {categoriesMeals && <CategoriesButtons listCategories={ categoriesMeals } />}
+      {categoriesMeals && (
+        <CategoriesButtons listCategories={ categoriesMeals } recipeType="food" />
+      )}
       <div>
-        {foodsRecipes ? foodsRecipes.map((result) => (
-          foodsRecipes.indexOf(result) < maxlength && handleRecipeFoods(result)))
-          : global.alert(
-            'Sinto muito, não encontramos nenhuma receita para esses filtros.',
-          )}
-        {resultsCategories && renderResultsCategories()}
-        {validate()}
+        {foodsRecipes ? foodsRecipes.map((food, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="comidas"
+            id={ food.idMeal }
+            index={ index }
+            key={ food.idMeal }
+            name={ food.strMeal }
+            thumb={ food.strMealThumb }
+          />)) : global.alert(PHRASE)}
+        {resultsCategories && resultsCategories.map((category, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="comidas"
+            id={ category.idMeal }
+            index={ index }
+            key={ category.idMeal }
+            name={ category.strMeal }
+            thumb={ category.strMealThumb }
+          />))}
+        {isFoods && <Redirect to={ `/comidas/${foodsRecipes[0].idMeal}` } />}
       </div>
       <Footer />
     </section>

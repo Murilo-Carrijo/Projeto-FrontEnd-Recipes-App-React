@@ -1,15 +1,22 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import requestCategories from '../servises/requestCategories';
 import MyContext from '../context/MyContext';
+// FUNCTIONS HELPERS
+import conditionsForRequestsDrinks from '../helpers/conditionsForRequestsDrinks';
+import generateBtnCategory from '../helpers/generateBtnCategory';
+// COMPONENTS
 import Footer from '../components/Footer';
-import requestDrinks from '../servises/requestDrinks';
+import RecipeCard from '../components/RecipeCard';
 import CategoriesButtons from '../components/CategoriesButtons';
 import {
   requestDrinksByName,
   requestDrinksFilterCategories,
   requestDrinksListCategories,
 } from '../servises/fetchDrinks';
+
+const MAX_LENGTH = 12;
+const MAX_CATEGORIES = 5;
+const PHRASE = 'Sinto muito, não encontramos nenhuma receita para esses filtros.';
 
 function Drinks() {
   const {
@@ -25,80 +32,20 @@ function Drinks() {
     setDrinksRecipes,
   } = useContext(MyContext);
 
-  const maxlength = 12;
-  const MAX_CATEGORIES = 5;
+  const isDrinks = drinksRecipes.length === 1;
 
   useEffect(() => {
-    requestDrinksByName('').then((recipes) => {
-      if (recipes) {
-        setResults(recipes);
-        setDrinksRecipes(recipes);
+    requestDrinksByName('').then((response) => {
+      if (response) {
+        setResults(response);
+        setDrinksRecipes(response);
       }
     });
   }, [setResults, setDrinksRecipes]);
 
-  function handleResults(i) {
-    if (i) {
-      setDrinksRecipes(i);
-    } else {
-      global.alert('Sinto muito, não encontramos nenhuma receita para esses filtros.');
-    }
-  }
-
   useEffect(() => {
-    requestDrinks(filterInfo, drinksRecipes, setResults, handleResults);
+    conditionsForRequestsDrinks(filterInfo, drinksRecipes, setResults);
   }, [filterInfo.radio, filterInfo.text, setDrinksRecipes]);
-
-  function handleRecipeDrinks(drink) {
-    return (
-      <div
-        key={ drink.idDrink }
-        data-testid={ `${drinksRecipes.indexOf(drink)}-recipe-card` }
-      >
-        <p
-          data-testid={ `${drinksRecipes.indexOf(drink)}-card-name` }
-        >
-          {drink.strDrink}
-        </p>
-        <img
-          src={ drink.strDrinkThumb }
-          alt={ drink.strDrink }
-          width="161"
-          data-testid={ `${drinksRecipes.indexOf(drink)}-card-img` }
-        />
-      </div>
-    );
-  }
-
-  function handleCategories(drink) {
-    return (
-      <div
-        key={ drink.idDrink }
-        data-testid={ `${resultsCategories.indexOf(drink)}-recipe-card` }
-      >
-        <p
-          data-testid={ `${resultsCategories.indexOf(drink)}-card-name` }
-        >
-          {drink.strDrink}
-        </p>
-        <img
-          src={ drink.strDrinkThumb }
-          alt={ drink.strDrink }
-          width="161"
-          data-testid={ `${resultsCategories.indexOf(drink)}-card-img` }
-        />
-      </div>
-    );
-  }
-
-  function renderResultsCategories() {
-    return resultsCategories.map((result) => (
-      resultsCategories.indexOf(result) < maxlength && handleCategories(result)));
-  }
-
-  useEffect(() => {
-    requestCategories(requestDrinksListCategories, setCategoriesDrinks, MAX_CATEGORIES);
-  }, []);
 
   useEffect(() => {
     if (selectCategories !== '') {
@@ -111,24 +58,35 @@ function Drinks() {
     }
   }, [setResultsCategories, selectCategories]);
 
-  function validate() {
-    if (drinksRecipes.length === 1) {
-      return selectCategories ? setResultsCategories(results)
-        : <Redirect to={ `/bebidas/${drinksRecipes[0].idDrink}` } />;
-    }
-  }
+  useEffect(() => {
+    generateBtnCategory(requestDrinksListCategories, setCategoriesDrinks, MAX_CATEGORIES);
+  }, [setCategoriesDrinks]);
 
   return (
     <section>
-      {categoriesDrinks && <CategoriesButtons listCategories={ categoriesDrinks } />}
+      {categoriesDrinks && (
+        <CategoriesButtons listCategories={ categoriesDrinks } recipeType="drink" />
+      )}
       <div>
-        {drinksRecipes ? drinksRecipes.map((result) => (
-          drinksRecipes.indexOf(result) < maxlength && handleRecipeDrinks(result)))
-          : global.alert(
-            'Sinto muito, não encontramos nenhuma receita para esses filtros.',
-          )}
-        {resultsCategories && renderResultsCategories()}
-        {validate()}
+        {drinksRecipes ? drinksRecipes.map((food, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="bebidas"
+            id={ food.idDrink }
+            index={ index }
+            key={ food.idDrink }
+            name={ food.strDrink }
+            thumb={ food.strDrinkThumb }
+          />)) : global.alert(PHRASE)}
+        {resultsCategories && resultsCategories.map((category, index) => (
+          index < MAX_LENGTH && <RecipeCard
+            type="bebidas"
+            id={ category.idDrink }
+            index={ index }
+            key={ category.idDrink }
+            name={ category.strDrink }
+            thumb={ category.strDrinkThumb }
+          />))}
+        {isDrinks && <Redirect to={ `/bebidas/${drinksRecipes[0].idDrink}` } />}
       </div>
       <Footer />
     </section>

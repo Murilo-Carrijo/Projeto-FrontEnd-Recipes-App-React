@@ -4,7 +4,18 @@ import Footer from '../components/Footer';
 function Explore() {
   return (
     <>
-      <h1>Explore</h1>
+      <button
+        type="button"
+        data-testid="explore-food"
+      >
+        All
+      </button>
+      <button
+        type="button"
+        data-testid="explore-drinks"
+      >
+        All
+      </button>
       <Footer />
     </>
   );

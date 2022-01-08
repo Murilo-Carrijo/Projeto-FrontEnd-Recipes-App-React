@@ -32,8 +32,6 @@ function Drinks() {
     setDrinksRecipes,
   } = useContext(MyContext);
 
-  const isDrinks = drinksRecipes.length === 1;
-
   useEffect(() => {
     requestDrinksByName('').then((response) => {
       if (response) {
@@ -44,11 +42,11 @@ function Drinks() {
   }, [setResults, setDrinksRecipes]);
 
   useEffect(() => {
-    conditionsForRequestsDrinks(filterInfo, drinksRecipes, setResults);
+    conditionsForRequestsDrinks(filterInfo, drinksRecipes, setDrinksRecipes);
   }, [filterInfo.radio, filterInfo.text, setDrinksRecipes]);
 
   useEffect(() => {
-    if (selectCategories !== '') {
+    if (selectCategories && selectCategories !== '') {
       requestDrinksFilterCategories(selectCategories).then((response) => {
         setResultsCategories(response);
         setDrinksRecipes([]);
@@ -61,6 +59,12 @@ function Drinks() {
   useEffect(() => {
     generateBtnCategory(requestDrinksListCategories, setCategoriesDrinks, MAX_CATEGORIES);
   }, [setCategoriesDrinks]);
+
+  function verifyLength() {
+    if (drinksRecipes && drinksRecipes.length === 1) {
+      return <Redirect to={ `/bebidas/${drinksRecipes[0].idDrink}` } />;
+    }
+  }
 
   return (
     <section>
@@ -86,7 +90,7 @@ function Drinks() {
             name={ category.strDrink }
             thumb={ category.strDrinkThumb }
           />))}
-        {isDrinks && <Redirect to={ `/bebidas/${drinksRecipes[0].idDrink}` } />}
+        {verifyLength()}
       </div>
       <Footer />
     </section>

@@ -32,8 +32,6 @@ function Foods() {
     setFoodsRecipes,
   } = useContext(MyContext);
 
-  const isFoods = foodsRecipes.length === 1;
-
   useEffect(() => {
     requestFoodsIngredients('').then((response) => {
       if (response) {
@@ -48,7 +46,7 @@ function Foods() {
   }, [filterInfo.text, filterInfo.radio, setFoodsRecipes]);
 
   useEffect(() => {
-    if (selectCategories !== '') {
+    if (selectCategories && selectCategories !== '') {
       requestFoodsFilterCategories(selectCategories).then((response) => {
         setResultsCategories(response);
         setFoodsRecipes([]);
@@ -62,6 +60,11 @@ function Foods() {
     generateBtnCategory(requestFoodsListCategories, setCategoriesMeals, MAX_CATEGORIES);
   }, [setCategoriesMeals]);
 
+  function verifyLength() {
+    if (foodsRecipes && foodsRecipes.length === 1) {
+      return <Redirect to={ `/comidas/${foodsRecipes[0].idMeal}` } />;
+    }
+  }
   return (
     <section>
       {categoriesMeals && (
@@ -86,7 +89,7 @@ function Foods() {
             name={ category.strMeal }
             thumb={ category.strMealThumb }
           />))}
-        {isFoods && <Redirect to={ `/comidas/${foodsRecipes[0].idMeal}` } />}
+        {verifyLength()}
       </div>
       <Footer />
     </section>

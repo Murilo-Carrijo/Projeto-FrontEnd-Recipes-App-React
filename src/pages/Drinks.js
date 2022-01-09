@@ -30,6 +30,8 @@ function Drinks() {
     setResultsCategories,
     drinksRecipes,
     setDrinksRecipes,
+    recipeIngredients,
+    setRecipeIngredients,
   } = useContext(MyContext);
 
   useEffect(() => {
@@ -50,11 +52,12 @@ function Drinks() {
       requestDrinksFilterCategories(selectCategories).then((response) => {
         setResultsCategories(response);
         setDrinksRecipes([]);
+        setRecipeIngredients([]);
       });
     } else {
       setDrinksRecipes(results);
     }
-  }, [setResultsCategories, selectCategories]);
+  }, [setResultsCategories, selectCategories, setRecipeIngredients]);
 
   useEffect(() => {
     generateBtnCategory(requestDrinksListCategories, setCategoriesDrinks, MAX_CATEGORIES);
@@ -66,21 +69,33 @@ function Drinks() {
     }
   }
 
+  function verifyRenderFoods() {
+    let list = [];
+    if (recipeIngredients.length > 0) {
+      list = recipeIngredients.slice(0, MAX_LENGTH);
+    } else if (drinksRecipes) {
+      list = drinksRecipes.slice(0, MAX_LENGTH);
+    }
+    return (
+      list ? list.map((drink, index) => (
+        index < MAX_LENGTH && <RecipeCard
+          type="bebidas"
+          id={ drink.idDrink }
+          index={ index }
+          key={ drink.idDrink }
+          name={ drink.strDrink }
+          thumb={ drink.strDrinkThumb }
+        />)) : global.alert(PHRASE)
+    );
+  }
+
   return (
     <section>
       {categoriesDrinks && (
         <CategoriesButtons listCategories={ categoriesDrinks } recipeType="drink" />
       )}
       <div>
-        {drinksRecipes ? drinksRecipes.map((food, index) => (
-          index < MAX_LENGTH && <RecipeCard
-            type="bebidas"
-            id={ food.idDrink }
-            index={ index }
-            key={ food.idDrink }
-            name={ food.strDrink }
-            thumb={ food.strDrinkThumb }
-          />)) : global.alert(PHRASE)}
+        {verifyRenderFoods()}
         {resultsCategories && resultsCategories.map((category, index) => (
           index < MAX_LENGTH && <RecipeCard
             type="bebidas"

@@ -30,6 +30,8 @@ function Foods() {
     setResultsCategories,
     foodsRecipes,
     setFoodsRecipes,
+    recipeIngredients,
+    setRecipeIngredients,
   } = useContext(MyContext);
 
   useEffect(() => {
@@ -50,11 +52,12 @@ function Foods() {
       requestFoodsFilterCategories(selectCategories).then((response) => {
         setResultsCategories(response);
         setFoodsRecipes([]);
+        setRecipeIngredients([]);
       });
     } else {
       setFoodsRecipes(results);
     }
-  }, [setResultsCategories, selectCategories]);
+  }, [setResultsCategories, selectCategories, setRecipeIngredients]);
 
   useEffect(() => {
     generateBtnCategory(requestFoodsListCategories, setCategoriesMeals, MAX_CATEGORIES);
@@ -65,21 +68,34 @@ function Foods() {
       return <Redirect to={ `/comidas/${foodsRecipes[0].idMeal}` } />;
     }
   }
+
+  function verifyRenderFoods() {
+    let list = [];
+    if (recipeIngredients.length > 0) {
+      list = recipeIngredients.slice(0, MAX_LENGTH);
+    } else if (foodsRecipes) {
+      list = foodsRecipes.slice(0, MAX_LENGTH);
+    }
+    return (
+      list ? list.map((food, index) => (
+        index < MAX_LENGTH && <RecipeCard
+          type="comidas"
+          id={ food.idMeal }
+          index={ index }
+          key={ food.idMeal }
+          name={ food.strMeal }
+          thumb={ food.strMealThumb }
+        />)) : global.alert(PHRASE)
+    );
+  }
+
   return (
     <section>
       {categoriesMeals && (
         <CategoriesButtons listCategories={ categoriesMeals } recipeType="food" />
       )}
       <div>
-        {foodsRecipes ? foodsRecipes.map((food, index) => (
-          index < MAX_LENGTH && <RecipeCard
-            type="comidas"
-            id={ food.idMeal }
-            index={ index }
-            key={ food.idMeal }
-            name={ food.strMeal }
-            thumb={ food.strMealThumb }
-          />)) : global.alert(PHRASE)}
+        {verifyRenderFoods()}
         {resultsCategories && resultsCategories.map((category, index) => (
           index < MAX_LENGTH && <RecipeCard
             type="comidas"

@@ -4,6 +4,7 @@ const ENDPOINT_DRINKS_FIRST_LETTER = 'https://www.thecocktaildb.com/api/json/v1/
 const ENDPOINT_FILTER_DRINKS_CATEGORIES = 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=';
 const ENDPOINT_LIST_DRINKS_CATEGORIES = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
 const ENDPOINT_DRINKS_RANDOM_RECIPE = 'https://www.thecocktaildb.com/api/json/v1/1/random.php';
+const ENDPOINT_LIST_DRINKS_INGREDIENT = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list';
 
 export async function requestDrinksIngredients(drink) {
   const ENDPOINT = `${ENDPOINT_DRINKS_INGREDIENT}${drink}`;
@@ -45,6 +46,12 @@ export async function requestDrinksListCategories() {
 
 export async function requestDrinksRandomRecipe() {
   const response = await fetch(ENDPOINT_DRINKS_RANDOM_RECIPE);
+  const { drinks } = await response.json();
+  return drinks;
+}
+
+export async function requestDrinksIngredientsList() {
+  const response = await fetch(ENDPOINT_LIST_DRINKS_INGREDIENT);
   const { drinks } = await response.json();
   return drinks;
 }

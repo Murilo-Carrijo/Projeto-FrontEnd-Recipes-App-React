@@ -45,7 +45,7 @@ O App de Receitas é um site que consome 2 APIs para entregar ao usuário receit
 ## Como rodar o projeto localmente
 
 1. Clone o repositório
-  * `git@github.com:Murilo-Carrijo/Projeto-Fundamentos-Trybewarts-JavaScript.git`
+  * `git@github.com:Murilo-Carrijo/Projeto-FrontEnd-Recipes-App-React.git`
   * Entre na pasta do repositório que você acabou de clonar:
     * `cd Projeto-FrontEnd-Recipes-App-React`
 
